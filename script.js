@@ -1,4 +1,3 @@
-// Firebase config (replace with your real config)
 const firebaseConfig = {
   apiKey: "AIzaSyCQ-l1tIgXkcLVSrwIwO-jG4x2U5ZRvpLQ",
   authDomain: "gps-tracker-537d0.firebaseapp.com",
@@ -36,6 +35,10 @@ ref.on("value", (snapshot) => {
       .addTo(map)
       .bindPopup(`${name}<br>📍 ${lat}, ${lon}`);
 
-    infoBox.innerHTML += `<div style="margin-bottom: 8px;"><b>${name}</b><br>📍 ${lat}, ${lon}</div>`;
+    infoBox.innerHTML += `
+      <div style="margin-bottom: 12px;">
+        <strong>${name}</strong><br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}
+      </div>
+    `;
   }
 });
