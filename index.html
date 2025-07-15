@@ -7,34 +7,40 @@
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"/>
     <style>
-        html, body, #map { height: 100%; margin: 0; padding: 0; }
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
         .info-box {
             position: absolute;
             top: 20px;
-            right: 20px; /* moved to the right */
-            background: white;
-            padding: 12px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            right: 20px;
+            background: #ffffffee;
+            padding: 14px 18px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             z-index: 999;
             font-family: sans-serif;
             font-size: 14px;
+            max-width: 250px;
+            line-height: 1.5em;
         }
-
     </style>
 </head>
+
 <script>
-  const password = prompt("Enter password:");
-  if (password !== "anubhav123") {
-    document.body.innerHTML = "<h2>❌ Access Denied</h2>";
-    throw new Error("Access denied");
-  }
+    const password = prompt("Enter password:");
+    if (password !== "anubhav123") {
+        document.body.innerHTML = "<h2>❌ Access Denied</h2>";
+        throw new Error("Access denied");
+    }
 </script>
 
 <body>
     <div id="map"></div>
     <div class="info-box" id="info"></div>
-
     <script src="script.js"></script>
 </body>
 </html>
