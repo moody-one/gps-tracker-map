@@ -22,6 +22,14 @@
         }
     </style>
 </head>
+<script>
+  const password = prompt("Enter password:");
+  if (password !== "anubhav123") {
+    document.body.innerHTML = "<h2>❌ Access Denied</h2>";
+    throw new Error("Access denied");
+  }
+</script>
+
 <body>
     <div id="map"></div>
     <div class="info-box" id="info"></div>
