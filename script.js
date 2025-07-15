@@ -18,12 +18,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const infoBox = document.getElementById("info");
 const ref = firebase.database().ref("location");
 
+const markerColors = [
+  'blue', 'red', 'green', 'orange', 'yellow',
+  'violet', 'grey', 'black', 'gold', 'darkgreen',
+  'darkred', 'lightblue'
+];
+
+const iconBaseURL = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/";
+
 ref.on("value", (snapshot) => {
   const data = snapshot.val();
   infoBox.innerHTML = "";
+
   map.eachLayer((layer) => {
     if (layer instanceof L.Marker) map.removeLayer(layer);
   });
+
+  let colorIndex = 0;
 
   for (const id in data) {
     const user = data[id];
@@ -31,12 +42,24 @@ ref.on("value", (snapshot) => {
     const lon = user.lon;
     const name = user.name || "Unknown";
 
-    L.marker([lat, lon])
+    const color = markerColors[colorIndex % markerColors.length];
+    colorIndex++;
+
+    const customIcon = L.icon({
+      iconUrl: `${iconBaseURL}marker-icon-${color}.png`,
+      shadowUrl: `${iconBaseURL}marker-shadow.png`,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    L.marker([lat, lon], { icon: customIcon })
       .addTo(map)
-      .bindPopup(`${name}<br>📍 ${lat}, ${lon}`);
+      .bindPopup(`${name}<br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}`);
 
     infoBox.innerHTML += `
-      <div style="margin-bottom: 12px;">
+      <div style="margin-bottom: 12px; color: ${color};">
         <strong>${name}</strong><br>📍 ${lat.toFixed(4)}, ${lon.toFixed(4)}
       </div>
     `;
