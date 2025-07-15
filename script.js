@@ -1,44 +1,41 @@
-// Firebase config
+// Firebase config (replace with your real config)
 const firebaseConfig = {
-    apiKey: "AIzaSyCQ-l1tIgXkcLVSrwIwO-jG4x2U5ZRvpLQ",
-    authDomain: "gps-tracker-537d0.firebaseapp.com",
-    databaseURL: "https://gps-tracker-537d0-default-rtdb.firebaseio.com",
-    projectId: "gps-tracker-537d0",
-    storageBucket: "gps-tracker-537d0.firebasestorage.app",
-    messagingSenderId: "806063466436",
-    appId: "1:806063466436:web:bfc261355ebacd0e2f2691",
-    measurementId: "G-807W5N7100"
+  apiKey: "AIzaSyCQ-l1tIgXkcLVSrwIwO-jG4x2U5ZRvpLQ",
+  authDomain: "gps-tracker-537d0.firebaseapp.com",
+  databaseURL: "https://gps-tracker-537d0-default-rtdb.firebaseio.com",
+  projectId: "gps-tracker-537d0",
+  storageBucket: "gps-tracker-537d0.appspot.com",
+  messagingSenderId: "806063466436",
+  appId: "1:806063466436:web:bfc261355ebacd0e2f2691"
 };
+
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.database();
 const map = L.map('map').setView([20.59, 78.96], 5);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
 
-const markers = {};
 const infoBox = document.getElementById("info");
+const ref = firebase.database().ref("location");
 
-function updateMap(data) {
-    infoBox.innerHTML = "";
-    for (const [id, loc] of Object.entries(data)) {
-        if (typeof loc === "object" && loc.lat && loc.lon) {
-            const { lat, lon, name } = loc;
+ref.on("value", (snapshot) => {
+  const data = snapshot.val();
+  infoBox.innerHTML = "";
+  map.eachLayer((layer) => {
+    if (layer instanceof L.Marker) map.removeLayer(layer);
+  });
 
-            // Update or create marker
-            if (markers[id]) {
-                markers[id].setLatLng([lat, lon]);
-            } else {
-                markers[id] = L.marker([lat, lon]).addTo(map).bindPopup(name || "Unknown");
-            }
+  for (const id in data) {
+    const user = data[id];
+    const lat = user.lat;
+    const lon = user.lon;
+    const name = user.name || "Unknown";
 
-            // Update info box
-            infoBox.innerHTML += `<div><b>${name || "User"}</b>: 📍 ${lat}, ${lon}</div>`;
-        }
-    }
-}
+    L.marker([lat, lon])
+      .addTo(map)
+      .bindPopup(`${name}<br>📍 ${lat}, ${lon}`);
 
-// Live listener
-db.ref("location").on("value", (snapshot) => {
-    const data = snapshot.val();
-    if (data) updateMap(data);
+    infoBox.innerHTML += `<div style="margin-bottom: 8px;"><b>${name}</b><br>📍 ${lat}, ${lon}</div>`;
+  }
 });
