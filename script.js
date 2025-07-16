@@ -19,14 +19,15 @@ const ref = firebase.database().ref("location");
 const infoBox = document.getElementById("info");
 const sosPopup = document.getElementById("sos-popup");
 const ignoreBtn = document.getElementById("ignore-btn");
-const beep = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+const trackBtn = document.getElementById("track-btn");
+const beep = new Audio("alert.mp3");  // Local audio file
 
 let sosActive = false;
 
 ref.on("value", (snapshot) => {
   const data = snapshot.val();
   infoBox.innerHTML = "";
-  let anySOS = false;
+  sosActive = false;
 
   map.eachLayer((layer) => {
     if (layer instanceof L.Marker) map.removeLayer(layer);
@@ -40,25 +41,24 @@ ref.on("value", (snapshot) => {
     const sos = user.sos === true;
 
     const marker = L.marker([lat, lon]).addTo(map);
-    marker.bindPopup(`${name}<br>📍 ${lat}, ${lon}${sos ? "<br>🚨 <b>SOS!</b>" : ""}`);
-
+    marker.bindPopup(`${name}<br>📍 ${lat}, ${lon}`);
     infoBox.innerHTML += `<div style="margin-bottom: 8px; ${sos ? 'color:red;' : ''}">
       <b>${name}</b><br>📍 ${lat}, ${lon} ${sos ? '<br>🚨 SOS Triggered!' : ''}
     </div>`;
 
-    if (sos) anySOS = true;
+    if (sos) {
+      sosActive = true;
+    }
   }
 
-  if (anySOS && !sosActive) {
+  if (sosActive) {
     sosPopup.style.display = "flex";
     beep.loop = true;
     beep.play();
-    sosActive = true;
-  } else if (!anySOS && sosActive) {
+  } else {
     sosPopup.style.display = "none";
     beep.pause();
     beep.currentTime = 0;
-    sosActive = false;
   }
 });
 
@@ -66,5 +66,4 @@ ignoreBtn.onclick = () => {
   sosPopup.style.display = "none";
   beep.pause();
   beep.currentTime = 0;
-  sosActive = false;
 };
