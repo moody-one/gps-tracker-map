@@ -26,6 +26,8 @@ let sosActive = false;
 ref.on("value", (snapshot) => {
   const data = snapshot.val();
   infoBox.innerHTML = "";
+  let anySOS = false;
+
   map.eachLayer((layer) => {
     if (layer instanceof L.Marker) map.removeLayer(layer);
   });
@@ -38,15 +40,25 @@ ref.on("value", (snapshot) => {
     const sos = user.sos === true;
 
     const marker = L.marker([lat, lon]).addTo(map);
-    marker.bindPopup(`${name}<br>📍 ${lat}, ${lon}`);
-    infoBox.innerHTML += `<div style="margin-bottom: 8px;"><b>${name}</b><br>📍 ${lat}, ${lon}</div>`;
+    marker.bindPopup(`${name}<br>📍 ${lat}, ${lon}${sos ? "<br>🚨 <b>SOS!</b>" : ""}`);
 
-    if (sos && !sosActive) {
-      sosPopup.style.display = "flex";
-      sosActive = true;
-      beep.loop = true;
-      beep.play();
-    }
+    infoBox.innerHTML += `<div style="margin-bottom: 8px; ${sos ? 'color:red;' : ''}">
+      <b>${name}</b><br>📍 ${lat}, ${lon} ${sos ? '<br>🚨 SOS Triggered!' : ''}
+    </div>`;
+
+    if (sos) anySOS = true;
+  }
+
+  if (anySOS && !sosActive) {
+    sosPopup.style.display = "flex";
+    beep.loop = true;
+    beep.play();
+    sosActive = true;
+  } else if (!anySOS && sosActive) {
+    sosPopup.style.display = "none";
+    beep.pause();
+    beep.currentTime = 0;
+    sosActive = false;
   }
 });
 
