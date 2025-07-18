@@ -1,53 +1,26 @@
-# gps-tracker-map
-📍 Live GPS Tracker with SOS Alert System
+# 📍 Live GPS Tracker with SOS Alert System
 
-Track multiple Android devices in real-time on an interactive map and receive instant SOS alerts via audio and popup notifications.
+Track real-time locations of multiple Android devices on a live map and get instant **SOS alerts** with audio & popup UI. Works perfectly with Firebase and can be hosted using **GitHub Pages**.
 
-✨ Features
+![Platform](https://img.shields.io/badge/Platform-Android%20%26%20Web-blue)
+![Firebase](https://img.shields.io/badge/Backend-Firebase-orange)
+![License](https://img.shields.io/badge/License-MIT-green)
+![Status](https://img.shields.io/badge/Status-Working-brightgreen)
 
-Real-time location tracking via Firebase Realtime Database
+---
 
-Leaflet-powered map with smooth markers
+## ✨ Features
 
-Supports multiple users with personalized names
+- ✅ Real-time GPS location updates
+- 🎨 Floating name boxes color-coded to user markers
+- 🧭 Leaflet map interface for accurate tracking
+- 🔐 Password-protected web access
+- 📢 SOS alert popup with **continuous beep**
+- 📱 Name registration in Android app
+- ☁️ Firebase Realtime Database backend
+- 💻 Compatible with GitHub Pages hosting
 
-SOS alert button in Android app (long press)
+---
 
-Web dashboard with:
+## 📂 Project Structure
 
-Popup alert window
-
-Beeping sound on SOS
-
-Password protection
-
-GitHub Pages hosting supported (works on phone & PC)
-
-Color-coded markers and info box per user
-
-🛠 Technologies Used
-
-Android (Kotlin)
-
-Firebase Realtime Database
-
-Leaflet.js
-
-HTML, CSS, JavaScript
-
-GitHub Pages
-
-🌐 Web Interface
-
-Upload index.html, script.js, and alert.mp3 to GitHub Pages.
-Live map and alerts are visible instantly on any device.
-
-📱 Android App
-
-Collects and sends GPS coordinates to Firebase
-
-Allows user to enter their name
-
-Runs in background
-
-Sends SOS with long-press (5 seconds)
